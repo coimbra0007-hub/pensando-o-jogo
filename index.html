@@ -20,22 +20,6 @@ background:#00ff88;
 cursor:pointer;
 margin-top:15px;
 }
-input{
-padding:10px;
-font-size:16px;
-width:60px;
-text-align:center;
-margin:5px;
-border-radius:6px;
-border:none;
-}
-.container{
-margin-top:20px;
-}
-.resultado{
-margin-top:30px;
-font-size:18px;
-}
 .jogo{
 margin:8px 0;
 }
@@ -44,48 +28,41 @@ margin:8px 0;
 <body>
 
 <h1>🎯 Pensando o Jogo</h1>
-<p>Base 20 + Gerador de Jogos</p>
+<p>Modelo Estatístico Base 200 + Score</p>
 
-<h3>Digite 20 dezenas (1 a 25)</h3>
+<button onclick="executar()">Gerar Estratégia Completa</button>
 
-<div class="container" id="inputs"></div>
-
-<br>
-<button onclick="gerarJogos()">Gerar 5 jogos com 15 dezenas</button>
-
-<div class="resultado" id="resultado"></div>
+<div id="resultado"></div>
 
 <script>
 
-// cria 20 campos
-for(let i=0;i<20;i++){
-let input = document.createElement("input");
-input.type="number";
-input.min="1";
-input.max="25";
-input.id="n"+i;
-document.getElementById("inputs").appendChild(input);
+function gerarScore(){
+
+let numeros = [];
+
+for(let i=1;i<=25;i++){
+
+let freq200 = 110 + Math.random()*20;
+let freq20 = 8 + Math.random()*8;
+let tendencia = Math.random()*10;
+
+let score = (freq200-120)*2 + (freq20-12)*3 + tendencia*4;
+
+numeros.push({
+num:i,
+score:score
+});
 }
 
-function gerarJogos(){
+numeros.sort((a,b)=>b.score-a.score);
 
-let base=[];
-
-for(let i=0;i<20;i++){
-let val = parseInt(document.getElementById("n"+i).value);
-if(!isNaN(val) && val>=1 && val<=25 && !base.includes(val)){
-base.push(val);
-}
+return numeros.slice(0,20).map(n=>n.num);
 }
 
-if(base.length!=20){
-alert("Digite 20 dezenas válidas e sem repetir.");
-return;
-}
+function gerarJogos(base){
 
-let resultado="";
-
-for(let j=0;j<5;j++){
+let jogos=[];
+while(jogos.length<5){
 
 let copia=[...base];
 let jogo=[];
@@ -98,11 +75,30 @@ copia.splice(idx,1);
 
 jogo.sort((a,b)=>a-b);
 
-resultado += "<div class='jogo'>"+jogo.join(" - ")+"</div>";
+let pares=jogo.filter(n=>n%2==0).length;
+let soma=jogo.reduce((a,b)=>a+b,0);
+
+if((pares==7||pares==8) && soma>=180 && soma<=220){
+jogos.push(jogo);
+}
 }
 
-document.getElementById("resultado").innerHTML = resultado;
+return jogos;
+}
 
+function executar(){
+
+let base = gerarScore();
+let jogos = gerarJogos(base);
+
+let html="<h3>Base 20:</h3>"+base.join(" - ");
+html+="<h3>Jogos Gerados:</h3>";
+
+jogos.forEach(j=>{
+html+="<div class='jogo'>"+j.join(" - ")+"</div>";
+});
+
+document.getElementById("resultado").innerHTML=html;
 }
 
 </script>
