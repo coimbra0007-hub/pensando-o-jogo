@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Pensando o Jogo</title>
+<style>
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+padding:40px;
+}
+button{
+padding:15px 25px;
+font-size:18px;
+border:none;
+border-radius:8px;
+background:#00ff88;
+cursor:pointer;
+margin-top:20px;
+}
+.numeros{
+margin-top:30px;
+font-size:22px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎯 Pensando o Jogo</h1>
+<p>Gerador simples Lotofácil</p>
+
+<button onclick="gerar()">Gerar 15 dezenas</button>
+
+<div class="numeros" id="resultado"></div>
+
+<script>
+function gerar(){
+let nums = [];
+while(nums.length < 15){
+let n = Math.floor(Math.random()*25)+1;
+if(!nums.includes(n)){
+nums.push(n);
+}
+}
+nums.sort((a,b)=>a-b);
+document.getElementById("resultado").innerHTML = nums.join(" - ");
+}
+</script>
+
+</body>
+</html>
