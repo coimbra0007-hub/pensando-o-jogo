@@ -12,41 +12,99 @@ text-align:center;
 padding:40px;
 }
 button{
-padding:15px 25px;
-font-size:18px;
+padding:12px 20px;
+font-size:16px;
 border:none;
 border-radius:8px;
 background:#00ff88;
 cursor:pointer;
+margin-top:15px;
+}
+input{
+padding:10px;
+font-size:16px;
+width:60px;
+text-align:center;
+margin:5px;
+border-radius:6px;
+border:none;
+}
+.container{
 margin-top:20px;
 }
-.numeros{
+.resultado{
 margin-top:30px;
-font-size:22px;
+font-size:18px;
+}
+.jogo{
+margin:8px 0;
 }
 </style>
 </head>
 <body>
 
 <h1>🎯 Pensando o Jogo</h1>
-<p>Gerador simples Lotofácil</p>
+<p>Base 20 + Gerador de Jogos</p>
 
-<button onclick="gerar()">Gerar 15 dezenas</button>
+<h3>Digite 20 dezenas (1 a 25)</h3>
 
-<div class="numeros" id="resultado"></div>
+<div class="container" id="inputs"></div>
+
+<br>
+<button onclick="gerarJogos()">Gerar 5 jogos com 15 dezenas</button>
+
+<div class="resultado" id="resultado"></div>
 
 <script>
-function gerar(){
-let nums = [];
-while(nums.length < 15){
-let n = Math.floor(Math.random()*25)+1;
-if(!nums.includes(n)){
-nums.push(n);
+
+// cria 20 campos
+for(let i=0;i<20;i++){
+let input = document.createElement("input");
+input.type="number";
+input.min="1";
+input.max="25";
+input.id="n"+i;
+document.getElementById("inputs").appendChild(input);
+}
+
+function gerarJogos(){
+
+let base=[];
+
+for(let i=0;i<20;i++){
+let val = parseInt(document.getElementById("n"+i).value);
+if(!isNaN(val) && val>=1 && val<=25 && !base.includes(val)){
+base.push(val);
 }
 }
-nums.sort((a,b)=>a-b);
-document.getElementById("resultado").innerHTML = nums.join(" - ");
+
+if(base.length!=20){
+alert("Digite 20 dezenas válidas e sem repetir.");
+return;
 }
+
+let resultado="";
+
+for(let j=0;j<5;j++){
+
+let copia=[...base];
+let jogo=[];
+
+while(jogo.length<15){
+let idx=Math.floor(Math.random()*copia.length);
+jogo.push(copia[idx]);
+copia.splice(idx,1);
+}
+
+jogo.sort((a,b)=>a-b);
+
+resultado += "<div class='jogo'>"+jogo.join(" - ")+"</div>";
+}
+
+document.getElementById("resultado").innerHTML = resultado;
+
+}
+
 </script>
 
 </body>
